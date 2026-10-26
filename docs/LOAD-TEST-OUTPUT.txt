@@ -1,0 +1,20 @@
+
+> pooltable-payments@1.0.0-rc1 load
+> node --disable-warning=ExperimentalWarning scripts/load-test.ts
+
+50 simulated controllers online: 50
+
+=== results ===
+POST /api/public/pay (30 at once)      n= 30  p50=135ms  p95=175ms  max=177ms
+stk-callback (60 incl. duplicates)     n= 60  p50=124ms  p95=259ms  max=267ms
+callback -> all games released         n= 30  p50=128ms  p95=259ms  max=269ms
+total time from callbacks to last release: 379ms; device syncs served: 110
+PASS  all 30 payments accepted (0 failed: )
+PASS  exactly 30 credited despite duplicate callbacks (got 30)
+PASS  games issued == games paid for (90 vs 90)
+PASS  vends created == games paid for (90 vs 90)
+PASS  every vend executed exactly once by a device (90 vs 90)
+PASS  ledger balanced
+PASS  audit chain intact
+PASS  no server errors logged (0)
+PASS  no failed device syncs (0)

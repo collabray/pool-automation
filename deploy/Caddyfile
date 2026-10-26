@@ -1,0 +1,18 @@
+{
+	email {$ACME_EMAIL}
+}
+
+{$DOMAIN} {
+	encode gzip
+	request_body { max_size 4MB }
+	header {
+		-Server
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+	}
+	reverse_proxy app:8080 {
+		# Long-poll and SSE connections must not be buffered or cut short
+		flush_interval -1
+		transport http { response_header_timeout 40s }
+	}
+	log { output stdout; format json }
+}

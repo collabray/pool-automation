@@ -1,0 +1,4487 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Pool Table Payment Automation API",
+    "version": "1.0.0",
+    "description": "Generated from the route table. Money is always integer minor units (1 KES = 100). Errors: { \"error\": { \"code\", \"message\", \"details?\" } }."
+  },
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "deviceSignature": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Sig",
+        "description": "HMAC-SHA256 over METHOD\\nPATH\\nTS\\nNONCE\\nSHA256(body) with the per-device secret; also send X-Device-Id, X-Ts, X-Nonce."
+      }
+    }
+  },
+  "paths": {
+    "/api/health": {
+      "get": {
+        "summary": "GET /api/health",
+        "tags": [
+          "health"
+        ],
+        "security": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/setup/status": {
+      "get": {
+        "summary": "GET /api/setup/status",
+        "tags": [
+          "setup"
+        ],
+        "security": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/setup/owner": {
+      "post": {
+        "summary": "POST /api/setup/owner",
+        "tags": [
+          "setup"
+        ],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "username",
+                  "displayName",
+                  "password",
+                  "businessName"
+                ],
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 40
+                  },
+                  "displayName": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 10,
+                    "maxLength": 200
+                  },
+                  "businessName": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "summary": "POST /api/auth/login",
+        "tags": [
+          "auth"
+        ],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "username",
+                  "password"
+                ],
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "totp": {
+                    "type": "string",
+                    "maxLength": 10
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/auth/pin-login": {
+      "post": {
+        "summary": "POST /api/auth/pin-login",
+        "tags": [
+          "auth"
+        ],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "username",
+                  "pin"
+                ],
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "pin": {
+                    "type": "string",
+                    "minLength": 4,
+                    "maxLength": 8,
+                    "pattern": "^\\d+$"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/auth/refresh": {
+      "post": {
+        "summary": "POST /api/auth/refresh",
+        "tags": [
+          "auth"
+        ],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "refreshToken"
+                ],
+                "properties": {
+                  "refreshToken": {
+                    "type": "string",
+                    "minLength": 10,
+                    "maxLength": 200
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "summary": "POST /api/auth/logout",
+        "tags": [
+          "auth"
+        ],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "refreshToken"
+                ],
+                "properties": {
+                  "refreshToken": {
+                    "type": "string",
+                    "minLength": 10,
+                    "maxLength": 200
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/me": {
+      "get": {
+        "summary": "GET /api/me",
+        "tags": [
+          "me"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "attendant",
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/me/totp/begin": {
+      "post": {
+        "summary": "POST /api/me/totp/begin",
+        "tags": [
+          "me"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/me/totp/confirm": {
+      "post": {
+        "summary": "POST /api/me/totp/confirm",
+        "tags": [
+          "me"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "code"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "pattern": "^\\d{6}$"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/me/password": {
+      "post": {
+        "summary": "POST /api/me/password",
+        "tags": [
+          "me"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "attendant",
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "current",
+                  "password"
+                ],
+                "properties": {
+                  "current": {
+                    "type": "string",
+                    "maxLength": 200
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 10,
+                    "maxLength": 200
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/public/table/{code}": {
+      "get": {
+        "summary": "GET /api/public/table/:code",
+        "tags": [
+          "public"
+        ],
+        "security": [],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/public/pay": {
+      "post": {
+        "summary": "POST /api/public/pay",
+        "tags": [
+          "public"
+        ],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "code",
+                  "games",
+                  "phone",
+                  "idempotencyKey"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 20
+                  },
+                  "games": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000
+                  },
+                  "phone": {
+                    "type": "string",
+                    "minLength": 7,
+                    "maxLength": 20
+                  },
+                  "idempotencyKey": {
+                    "type": "string",
+                    "minLength": 8,
+                    "maxLength": 100
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/public/pay/{id}": {
+      "get": {
+        "summary": "GET /api/public/pay/:id",
+        "tags": [
+          "public"
+        ],
+        "security": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/public/pay/{id}/events": {
+      "get": {
+        "summary": "GET /api/public/pay/:id/events",
+        "tags": [
+          "public"
+        ],
+        "security": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/public/voucher": {
+      "post": {
+        "summary": "POST /api/public/voucher",
+        "tags": [
+          "public"
+        ],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "code",
+                  "voucher"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 20
+                  },
+                  "voucher": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 30
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/mpesa/stk-callback/{token}": {
+      "post": {
+        "summary": "POST /api/mpesa/stk-callback/:token",
+        "tags": [
+          "mpesa"
+        ],
+        "security": [],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/mpesa/c2b/validation/{token}": {
+      "post": {
+        "summary": "POST /api/mpesa/c2b/validation/:token",
+        "tags": [
+          "mpesa"
+        ],
+        "security": [],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/mpesa/c2b/confirmation/{token}": {
+      "post": {
+        "summary": "POST /api/mpesa/c2b/confirmation/:token",
+        "tags": [
+          "mpesa"
+        ],
+        "security": [],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/tables": {
+      "get": {
+        "summary": "GET /api/tables",
+        "tags": [
+          "tables"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "attendant",
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      },
+      "post": {
+        "summary": "POST /api/tables",
+        "tags": [
+          "tables"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Repeating a request with the same key returns the original response instead of acting twice."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "vendMode",
+                  "pricing"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "kind": {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  "vendMode": {
+                    "type": "string",
+                    "enum": [
+                      "COIN_PULSE",
+                      "SOLENOID_SLIDE",
+                      "GATE_SOLENOID"
+                    ]
+                  },
+                  "vendParams": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "pricing": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "releaseMode": {
+                    "type": "string",
+                    "enum": [
+                      "ONE",
+                      "ALL"
+                    ]
+                  },
+                  "requiresReadySensor": {
+                    "type": "boolean"
+                  },
+                  "confirmBySensor": {
+                    "type": "boolean"
+                  },
+                  "vendTimeoutMs": {
+                    "type": "integer",
+                    "minimum": 1000,
+                    "maximum": 300000
+                  },
+                  "maxVendAttempts": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10
+                  },
+                  "coinValueMinor": {
+                    "type": "integer",
+                    "minimum": 100,
+                    "maximum": 1000000
+                  },
+                  "manualVendEnabled": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/shifts/current": {
+      "get": {
+        "summary": "GET /api/shifts/current",
+        "tags": [
+          "shifts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "attendant",
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/shifts/open": {
+      "post": {
+        "summary": "POST /api/shifts/open",
+        "tags": [
+          "shifts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "attendant",
+          "manager",
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Repeating a request with the same key returns the original response instead of acting twice."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "floatMinor"
+                ],
+                "properties": {
+                  "floatMinor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000000
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/shifts/close": {
+      "post": {
+        "summary": "POST /api/shifts/close",
+        "tags": [
+          "shifts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "attendant",
+          "manager",
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Repeating a request with the same key returns the original response instead of acting twice."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "countedMinor"
+                ],
+                "properties": {
+                  "countedMinor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 1000000000
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/shifts/{id}/adjust": {
+      "post": {
+        "summary": "POST /api/shifts/:id/adjust",
+        "tags": [
+          "shifts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Repeating a request with the same key returns the original response instead of acting twice."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "amountMinor",
+                  "reason"
+                ],
+                "properties": {
+                  "amountMinor": {
+                    "type": "integer",
+                    "minimum": -100000000,
+                    "maximum": 100000000
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 300
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/cash/sale": {
+      "post": {
+        "summary": "POST /api/cash/sale",
+        "tags": [
+          "cash"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "attendant",
+          "manager",
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Repeating a request with the same key returns the original response instead of acting twice."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "tableId",
+                  "cashReceivedMinor"
+                ],
+                "properties": {
+                  "tableId": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 60
+                  },
+                  "cashReceivedMinor": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100000000
+                  },
+                  "discountMinor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000000
+                  },
+                  "discountReason": {
+                    "type": "string",
+                    "maxLength": 200
+                  },
+                  "approvalToken": {
+                    "type": "string",
+                    "maxLength": 80
+                  },
+                  "offline": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/cash/void": {
+      "post": {
+        "summary": "POST /api/cash/void",
+        "tags": [
+          "cash"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "attendant",
+          "manager",
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Repeating a request with the same key returns the original response instead of acting twice."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "saleId",
+                  "reason"
+                ],
+                "properties": {
+                  "saleId": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 60
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 200
+                  },
+                  "approvalToken": {
+                    "type": "string",
+                    "maxLength": 80
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/approvals": {
+      "post": {
+        "summary": "POST /api/approvals",
+        "tags": [
+          "approvals"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "attendant",
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "username",
+                  "secret",
+                  "kind"
+                ],
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "secret": {
+                    "type": "string",
+                    "minLength": 4,
+                    "maxLength": 200
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "password",
+                      "pin"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/cash/quote": {
+      "get": {
+        "summary": "GET /api/cash/quote",
+        "tags": [
+          "cash"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "attendant",
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/cash/receipt-sms": {
+      "post": {
+        "summary": "POST /api/cash/receipt-sms",
+        "tags": [
+          "cash"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "attendant",
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "saleId",
+                  "phone"
+                ],
+                "properties": {
+                  "saleId": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 60
+                  },
+                  "phone": {
+                    "type": "string",
+                    "minLength": 7,
+                    "maxLength": 20
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/cash/sales": {
+      "get": {
+        "summary": "GET /api/cash/sales",
+        "tags": [
+          "cash"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "attendant",
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/mpesa/pos-stk": {
+      "post": {
+        "summary": "POST /api/mpesa/pos-stk",
+        "tags": [
+          "mpesa"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "attendant",
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "tableId",
+                  "games",
+                  "phone",
+                  "idempotencyKey"
+                ],
+                "properties": {
+                  "tableId": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 60
+                  },
+                  "games": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000
+                  },
+                  "phone": {
+                    "type": "string",
+                    "minLength": 7,
+                    "maxLength": 20
+                  },
+                  "idempotencyKey": {
+                    "type": "string",
+                    "minLength": 8,
+                    "maxLength": 100
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/vends/manual": {
+      "post": {
+        "summary": "POST /api/vends/manual",
+        "tags": [
+          "vends"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "attendant",
+          "manager",
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Repeating a request with the same key returns the original response instead of acting twice."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "tableId",
+                  "reason"
+                ],
+                "properties": {
+                  "tableId": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 60
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 200
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/vends/{id}/resolve": {
+      "post": {
+        "summary": "POST /api/vends/:id/resolve",
+        "tags": [
+          "vends"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "attendant",
+          "manager",
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Repeating a request with the same key returns the original response instead of acting twice."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "action",
+                  "reason"
+                ],
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "RETRY",
+                      "REFUND",
+                      "KEEP_CREDIT"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 200
+                  },
+                  "approvalToken": {
+                    "type": "string",
+                    "maxLength": 80
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/vends/failed": {
+      "get": {
+        "summary": "GET /api/vends/failed",
+        "tags": [
+          "vends"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "attendant",
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/my/stats": {
+      "get": {
+        "summary": "GET /api/my/stats",
+        "tags": [
+          "my"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "attendant",
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/my/shift-stats": {
+      "get": {
+        "summary": "GET /api/my/shift-stats",
+        "tags": [
+          "my"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "attendant",
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/staff/{id}/stats": {
+      "get": {
+        "summary": "GET /api/staff/:id/stats",
+        "tags": [
+          "staff"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/staff/compare": {
+      "get": {
+        "summary": "GET /api/staff/compare",
+        "tags": [
+          "staff"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/reports/summary": {
+      "get": {
+        "summary": "GET /api/reports/summary",
+        "tags": [
+          "reports"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/my/export": {
+      "get": {
+        "summary": "GET /api/my/export",
+        "tags": [
+          "my"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "attendant",
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/reports/export": {
+      "get": {
+        "summary": "GET /api/reports/export",
+        "tags": [
+          "reports"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/unallocated": {
+      "get": {
+        "summary": "GET /api/unallocated",
+        "tags": [
+          "unallocated"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/unallocated/{id}/assign": {
+      "post": {
+        "summary": "POST /api/unallocated/:id/assign",
+        "tags": [
+          "unallocated"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Repeating a request with the same key returns the original response instead of acting twice."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "tableId",
+                  "reason"
+                ],
+                "properties": {
+                  "tableId": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 60
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 300
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/vouchers/batch": {
+      "post": {
+        "summary": "POST /api/vouchers/batch",
+        "tags": [
+          "vouchers"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Repeating a request with the same key returns the original response instead of acting twice."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "count",
+                  "games"
+                ],
+                "properties": {
+                  "count": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000
+                  },
+                  "games": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100
+                  },
+                  "tableId": {
+                    "type": "string",
+                    "maxLength": 60
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/vouchers/batch/{id}/void": {
+      "post": {
+        "summary": "POST /api/vouchers/batch/:id/void",
+        "tags": [
+          "vouchers"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/payments": {
+      "get": {
+        "summary": "GET /api/payments",
+        "tags": [
+          "payments"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/payments/{id}/reverse": {
+      "post": {
+        "summary": "POST /api/payments/:id/reverse",
+        "tags": [
+          "payments"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Repeating a request with the same key returns the original response instead of acting twice."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "reason"
+                ],
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 300
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/alerts": {
+      "get": {
+        "summary": "GET /api/alerts",
+        "tags": [
+          "alerts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/alerts/{id}/resolve": {
+      "post": {
+        "summary": "POST /api/alerts/:id/resolve",
+        "tags": [
+          "alerts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/coins/collections": {
+      "post": {
+        "summary": "POST /api/coins/collections",
+        "tags": [
+          "coins"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Repeating a request with the same key returns the original response instead of acting twice."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "tableId",
+                  "countedMinor"
+                ],
+                "properties": {
+                  "tableId": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 60
+                  },
+                  "countedMinor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 1000000000
+                  },
+                  "note": {
+                    "type": "string",
+                    "maxLength": 300
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      },
+      "get": {
+        "summary": "GET /api/coins/collections",
+        "tags": [
+          "coins"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/shifts": {
+      "get": {
+        "summary": "GET /api/shifts",
+        "tags": [
+          "shifts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/audit": {
+      "get": {
+        "summary": "GET /api/audit",
+        "tags": [
+          "audit"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/audit/verify": {
+      "get": {
+        "summary": "GET /api/audit/verify",
+        "tags": [
+          "audit"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/errors": {
+      "get": {
+        "summary": "GET /api/errors",
+        "tags": [
+          "errors"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/system/health": {
+      "get": {
+        "summary": "GET /api/system/health",
+        "tags": [
+          "system"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/tables/{id}": {
+      "get": {
+        "summary": "GET /api/tables/:id",
+        "tags": [
+          "tables"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      },
+      "patch": {
+        "summary": "PATCH /api/tables/:id",
+        "tags": [
+          "tables"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Repeating a request with the same key returns the original response instead of acting twice."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "ACTIVE",
+                      "DISABLED"
+                    ]
+                  },
+                  "pricing": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "vendMode": {
+                    "type": "string",
+                    "enum": [
+                      "COIN_PULSE",
+                      "SOLENOID_SLIDE",
+                      "GATE_SOLENOID"
+                    ]
+                  },
+                  "vendParams": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "releaseMode": {
+                    "type": "string",
+                    "enum": [
+                      "ONE",
+                      "ALL"
+                    ]
+                  },
+                  "requiresReadySensor": {
+                    "type": "boolean"
+                  },
+                  "confirmBySensor": {
+                    "type": "boolean"
+                  },
+                  "vendTimeoutMs": {
+                    "type": "integer",
+                    "minimum": 1000,
+                    "maximum": 300000
+                  },
+                  "maxVendAttempts": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10
+                  },
+                  "commandTtlMs": {
+                    "type": "integer",
+                    "minimum": 1000,
+                    "maximum": 600000
+                  },
+                  "coinValueMinor": {
+                    "type": "integer",
+                    "minimum": 100,
+                    "maximum": 1000000
+                  },
+                  "manualVendEnabled": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/tables/{id}/rotate-device-secret": {
+      "post": {
+        "summary": "POST /api/tables/:id/rotate-device-secret",
+        "tags": [
+          "tables"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Repeating a request with the same key returns the original response instead of acting twice."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/tables/{id}/test-vend": {
+      "post": {
+        "summary": "POST /api/tables/:id/test-vend",
+        "tags": [
+          "tables"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Repeating a request with the same key returns the original response instead of acting twice."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/owner/tables/{id}/open": {
+      "post": {
+        "summary": "POST /api/owner/tables/:id/open",
+        "tags": [
+          "owner"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Repeating a request with the same key returns the original response instead of acting twice."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "maxLength": 200
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/tables/{id}/qr": {
+      "get": {
+        "summary": "GET /api/tables/:id/qr",
+        "tags": [
+          "tables"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/tables/{id}/qr.svg": {
+      "get": {
+        "summary": "GET /api/tables/:id/qr.svg",
+        "tags": [
+          "tables"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/staff": {
+      "get": {
+        "summary": "GET /api/staff",
+        "tags": [
+          "staff"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      },
+      "post": {
+        "summary": "POST /api/staff",
+        "tags": [
+          "staff"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Repeating a request with the same key returns the original response instead of acting twice."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "username",
+                  "displayName",
+                  "role"
+                ],
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 40
+                  },
+                  "displayName": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "manager",
+                      "attendant"
+                    ]
+                  },
+                  "password": {
+                    "type": "string",
+                    "maxLength": 200
+                  },
+                  "pin": {
+                    "type": "string",
+                    "maxLength": 8
+                  },
+                  "canSeeMoney": {
+                    "type": "boolean"
+                  },
+                  "voidLimitMinor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000000
+                  },
+                  "discountLimitMinor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000000
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/staff/{id}": {
+      "patch": {
+        "summary": "PATCH /api/staff/:id",
+        "tags": [
+          "staff"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Repeating a request with the same key returns the original response instead of acting twice."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {
+                  "displayName": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "active": {
+                    "type": "boolean"
+                  },
+                  "canSeeMoney": {
+                    "type": "boolean"
+                  },
+                  "voidLimitMinor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000000
+                  },
+                  "discountLimitMinor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000000
+                  },
+                  "password": {
+                    "type": "string",
+                    "maxLength": 200
+                  },
+                  "pin": {
+                    "type": "string",
+                    "maxLength": 8
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/settings": {
+      "get": {
+        "summary": "GET /api/settings",
+        "tags": [
+          "settings"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      },
+      "put": {
+        "summary": "PUT /api/settings",
+        "tags": [
+          "settings"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "owner"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "settings"
+                ],
+                "properties": {
+                  "settings": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/daraja": {
+      "get": {
+        "summary": "GET /api/daraja",
+        "tags": [
+          "daraja"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      },
+      "put": {
+        "summary": "PUT /api/daraja",
+        "tags": [
+          "daraja"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "owner"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "env",
+                  "shortcode",
+                  "passkey",
+                  "consumerKey",
+                  "consumerSecret",
+                  "txType",
+                  "callbackBaseUrl"
+                ],
+                "properties": {
+                  "env": {
+                    "type": "string",
+                    "enum": [
+                      "sandbox",
+                      "production"
+                    ]
+                  },
+                  "shortcode": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 12,
+                    "pattern": "^\\d+$"
+                  },
+                  "partyB": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 12,
+                    "pattern": "^\\d+$"
+                  },
+                  "passkey": {
+                    "type": "string",
+                    "minLength": 10,
+                    "maxLength": 200
+                  },
+                  "consumerKey": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 200
+                  },
+                  "consumerSecret": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 200
+                  },
+                  "txType": {
+                    "type": "string",
+                    "enum": [
+                      "CustomerPayBillOnline",
+                      "CustomerBuyGoodsOnline"
+                    ]
+                  },
+                  "callbackBaseUrl": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "pattern": "^https:\\/\\/[^\\s/]+$"
+                  },
+                  "rotateCallbackToken": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/daraja/test": {
+      "post": {
+        "summary": "POST /api/daraja/test",
+        "tags": [
+          "daraja"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/notifications": {
+      "get": {
+        "summary": "GET /api/notifications",
+        "tags": [
+          "notifications"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      },
+      "put": {
+        "summary": "PUT /api/notifications",
+        "tags": [
+          "notifications"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "owner"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {
+                  "sms": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "username",
+                      "apiKey",
+                      "to"
+                    ],
+                    "properties": {
+                      "username": {
+                        "type": "string",
+                        "maxLength": 60
+                      },
+                      "apiKey": {
+                        "type": "string",
+                        "maxLength": 200
+                      },
+                      "to": {
+                        "type": "array",
+                        "maxItems": 10,
+                        "items": {
+                          "type": "string",
+                          "maxLength": 20
+                        }
+                      },
+                      "sender": {
+                        "type": "string",
+                        "maxLength": 20
+                      }
+                    }
+                  },
+                  "telegram": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "botToken",
+                      "chatId"
+                    ],
+                    "properties": {
+                      "botToken": {
+                        "type": "string",
+                        "maxLength": 200
+                      },
+                      "chatId": {
+                        "type": "string",
+                        "maxLength": 40
+                      }
+                    }
+                  },
+                  "webhook": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "url"
+                    ],
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "maxLength": 300,
+                        "pattern": "^https:\\/\\/"
+                      },
+                      "secret": {
+                        "type": "string",
+                        "maxLength": 100
+                      }
+                    }
+                  },
+                  "email": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "host",
+                      "port",
+                      "secure",
+                      "user",
+                      "pass",
+                      "from",
+                      "to"
+                    ],
+                    "properties": {
+                      "host": {
+                        "type": "string",
+                        "maxLength": 200
+                      },
+                      "port": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 65535
+                      },
+                      "secure": {
+                        "type": "boolean"
+                      },
+                      "user": {
+                        "type": "string",
+                        "maxLength": 200
+                      },
+                      "pass": {
+                        "type": "string",
+                        "maxLength": 200
+                      },
+                      "from": {
+                        "type": "string",
+                        "maxLength": 200
+                      },
+                      "to": {
+                        "type": "array",
+                        "maxItems": 10,
+                        "items": {
+                          "type": "string",
+                          "maxLength": 200
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/notifications/test": {
+      "post": {
+        "summary": "POST /api/notifications/test",
+        "tags": [
+          "notifications"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/privacy/export": {
+      "post": {
+        "summary": "POST /api/privacy/export",
+        "tags": [
+          "privacy"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "owner"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "phone"
+                ],
+                "properties": {
+                  "phone": {
+                    "type": "string",
+                    "minLength": 7,
+                    "maxLength": 20
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/privacy/erase": {
+      "post": {
+        "summary": "POST /api/privacy/erase",
+        "tags": [
+          "privacy"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Repeating a request with the same key returns the original response instead of acting twice."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "phone",
+                  "reason"
+                ],
+                "properties": {
+                  "phone": {
+                    "type": "string",
+                    "minLength": 7,
+                    "maxLength": 20
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 300
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/owner/dashboard": {
+      "get": {
+        "summary": "GET /api/owner/dashboard",
+        "tags": [
+          "owner"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "manager",
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/firmware": {
+      "post": {
+        "summary": "POST /api/firmware",
+        "tags": [
+          "firmware"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Repeating a request with the same key returns the original response instead of acting twice."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "version",
+                  "signature",
+                  "dataBase64"
+                ],
+                "properties": {
+                  "version": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "pattern": "^[0-9A-Za-z._-]+$"
+                  },
+                  "signature": {
+                    "type": "string",
+                    "minLength": 20,
+                    "maxLength": 200,
+                    "pattern": "^[A-Za-z0-9+/=]+$"
+                  },
+                  "dataBase64": {
+                    "type": "string",
+                    "minLength": 100,
+                    "maxLength": 2700000,
+                    "pattern": "^[A-Za-z0-9+/=]+$"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      },
+      "get": {
+        "summary": "GET /api/firmware",
+        "tags": [
+          "firmware"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "owner"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/firmware/{version}": {
+      "patch": {
+        "summary": "PATCH /api/firmware/:version",
+        "tags": [
+          "firmware"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-roles": [
+          "owner"
+        ],
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "active"
+                ],
+                "properties": {
+                  "active": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Role not allowed"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/device/ota/{version}": {
+      "get": {
+        "summary": "GET /api/device/ota/:version",
+        "tags": [
+          "device"
+        ],
+        "security": [
+          {
+            "deviceSignature": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/device/sync": {
+      "post": {
+        "summary": "POST /api/device/sync",
+        "tags": [
+          "device"
+        ],
+        "security": [
+          {
+            "deviceSignature": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {
+                  "fw": {
+                    "type": "string",
+                    "maxLength": 40
+                  },
+                  "uptimeS": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rssi": {
+                    "type": "integer",
+                    "minimum": -150,
+                    "maximum": 0
+                  },
+                  "freeHeap": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "resetReason": {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  "sensors": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "wait": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 25
+                  },
+                  "acks": {
+                    "type": "array",
+                    "maxItems": 20,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "vendId",
+                        "nonce",
+                        "status",
+                        "ts",
+                        "signature"
+                      ],
+                      "properties": {
+                        "vendId": {
+                          "type": "string",
+                          "maxLength": 60
+                        },
+                        "nonce": {
+                          "type": "string",
+                          "maxLength": 40
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "ACK",
+                            "REJECT",
+                            "CONFIRMED"
+                          ]
+                        },
+                        "ts": {
+                          "type": "integer"
+                        },
+                        "signature": {
+                          "type": "string",
+                          "maxLength": 80
+                        }
+                      }
+                    }
+                  },
+                  "events": {
+                    "type": "array",
+                    "maxItems": 50,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "id",
+                        "kind"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 60
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "coin",
+                            "tamper",
+                            "tamper_clear",
+                            "unauthorized_vend",
+                            "sensor_fault",
+                            "vend_done",
+                            "manual_request"
+                          ]
+                        },
+                        "data": {
+                          "type": "object",
+                          "additionalProperties": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    }
+  }
+}

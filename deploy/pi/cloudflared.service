@@ -1,0 +1,15 @@
+# Cloudflare Tunnel gives the Pi a public HTTPS address without opening any router ports (M-Pesa callbacks need this).
+# Setup: cloudflared tunnel login && cloudflared tunnel create pooltable && cloudflared tunnel route dns pooltable pool.example.com
+# Then put /etc/cloudflared/config.yml:  tunnel: <ID>  /  credentials-file: /etc/cloudflared/<ID>.json  /  ingress: [{hostname: pool.example.com, service: http://localhost:8080}, {service: http_status:404}]
+[Unit]
+Description=Cloudflare Tunnel
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/cloudflared --no-autoupdate tunnel run pooltable
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

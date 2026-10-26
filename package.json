@@ -1,0 +1,25 @@
+{
+  "name": "pooltable-payments",
+  "version": "1.0.0-rc1",
+  "description": "Open-source pay-per-game payment automation for coin-operated tables (M-Pesa + cash + ESP32 controller).",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "scripts": {
+    "test": "node --disable-warning=ExperimentalWarning --test --test-concurrency=1 \"tests/**/*.test.ts\"",
+    "typecheck": "tsc -p tsconfig.json",
+    "start": "node --disable-warning=ExperimentalWarning src/server/main.ts",
+    "init": "node scripts/gen-env.ts",
+    "backup": "node --disable-warning=ExperimentalWarning scripts/backup.ts",
+    "restore": "node --disable-warning=ExperimentalWarning scripts/restore.ts",
+    "load": "node --disable-warning=ExperimentalWarning scripts/load-test.ts",
+    "test:firmware": "sh firmware/tools/run-native-tests.sh"
+  },
+  "devDependencies": {
+    "typescript": "~5.8.3",
+    "@types/node": "^22.15.0"
+  }
+}

@@ -1,0 +1,25 @@
+# Mode B: Raspberry Pi. Install: sudo cp deploy/pi/pooltable.service /etc/systemd/system/ && sudo systemctl enable --now pooltable
+[Unit]
+Description=Pool table payment server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=pooltable
+WorkingDirectory=/opt/pooltable
+EnvironmentFile=/opt/pooltable/.env
+ExecStart=/usr/bin/node --disable-warning=ExperimentalWarning src/server/main.ts
+Restart=always
+RestartSec=3
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/opt/pooltable/data /opt/pooltable/backups
+StateDirectoryMode=0700
+# Hard stop so a hung process is restarted by systemd's watchdog logic
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target

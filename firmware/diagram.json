@@ -1,0 +1,12 @@
+{ "version": 1, "author": "pooltable", "editor": "wokwi",
+  "parts": [ { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-led", "id": "vend", "top": -60, "left": 120, "attrs": { "color": "green", "label": "VEND OUT (pin 26)" } },
+    { "type": "wokwi-resistor", "id": "r1", "top": -20, "left": 160, "attrs": { "value": "330" } },
+    { "type": "wokwi-pushbutton", "id": "btn-coin", "top": 120, "left": 160, "attrs": { "color": "yellow", "label": "coin pulse (27)" } },
+    { "type": "wokwi-pushbutton", "id": "btn-ready", "top": 170, "left": 160, "attrs": { "color": "blue", "label": "ready sensor (25)" } },
+    { "type": "wokwi-pushbutton", "id": "btn-tamper", "top": 220, "left": 160, "attrs": { "color": "red", "label": "tamper (33)" } },
+    { "type": "wokwi-pushbutton", "id": "btn-main", "top": 270, "left": 160, "attrs": { "color": "white", "label": "setup/test (14)" } } ],
+  "connections": [ [ "esp:TX0", "$serialMonitor:RX", "" ], [ "esp:RX0", "$serialMonitor:TX", "" ],
+    [ "esp:D26", "r1:1", "green", [] ], [ "r1:2", "vend:A", "green", [] ], [ "vend:C", "esp:GND.1", "black", [] ],
+    [ "esp:D27", "btn-coin:1.l", "yellow", [] ], [ "btn-coin:2.l", "esp:GND.1", "black", [] ], [ "esp:D25", "btn-ready:1.l", "blue", [] ], [ "btn-ready:2.l", "esp:GND.1", "black", [] ],
+    [ "esp:D33", "btn-tamper:1.l", "red", [] ], [ "btn-tamper:2.l", "esp:GND.1", "black", [] ], [ "esp:D14", "btn-main:1.l", "white", [] ], [ "btn-main:2.l", "esp:GND.1", "black", [] ] ] }

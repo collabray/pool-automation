@@ -1,0 +1,7 @@
+# Wokwi simulation (https://wokwi.com): build first with `pio run -e esp32dev`, then open this folder in VS Code with the Wokwi extension.
+# The simulation shows the vend output as an LED, with buttons for ready/tamper/coin. It cannot reach your real server: point it at a
+# publicly reachable test server (WiFi "Wokwi-GUEST"). NOT verified by the author; included as a starting point.
+[wokwi]
+version = 1
+firmware = '.pio/build/esp32dev/firmware.bin'
+elf = '.pio/build/esp32dev/firmware.elf'

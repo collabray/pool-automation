@@ -1,0 +1,36 @@
+# Mode A: Cloud VPS. Caddy gets and renews HTTPS certificates automatically; M-Pesa needs a public HTTPS address.
+#   1) node scripts/gen-env.ts --domain pool.example.com --email you@example.com   (or copy .env.example to .env and fill it in)
+#   2) docker compose up -d --build
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment: { DB_PATH: /data/pooltable.db, HOST: 0.0.0.0, PORT: "8080", TRUST_PROXY: "1", HSTS: "1", TZ: Africa/Nairobi }
+    volumes: [ "pool-data:/data" ]
+    expose: [ "8080" ]
+    read_only: true
+    tmpfs: [ /tmp ]
+    cap_drop: [ ALL ]
+    security_opt: [ "no-new-privileges:true" ]
+    logging: { driver: json-file, options: { max-size: "10m", max-file: "5" } }
+    healthcheck: { test: [ "CMD", "node", "-e", "fetch('http://127.0.0.1:8080/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))" ], interval: 30s, timeout: 5s, retries: 3, start_period: 20s }
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on: { app: { condition: service_healthy } }
+    ports: [ "80:80", "443:443" ]
+    environment: { DOMAIN: "${DOMAIN}", ACME_EMAIL: "${ACME_EMAIL}" }
+    volumes: [ "./deploy/Caddyfile:/etc/caddy/Caddyfile:ro", "caddy-data:/data", "caddy-config:/config" ]
+    logging: { driver: json-file, options: { max-size: "10m", max-file: "5" } }
+  backup:
+    build: .
+    restart: unless-stopped
+    command: [ "node", "--disable-warning=ExperimentalWarning", "scripts/backup.ts", "--daemon" ]
+    env_file: .env
+    environment: { DB_PATH: /data/pooltable.db, BACKUP_DIR: /backups, TZ: Africa/Nairobi }
+    volumes: [ "pool-data:/data", "./backups:/backups" ]
+    user: "10001:10001"
+    depends_on: [ app ]
+    logging: { driver: json-file, options: { max-size: "10m", max-file: "5" } }
+volumes: { pool-data: {}, caddy-data: {}, caddy-config: {} }

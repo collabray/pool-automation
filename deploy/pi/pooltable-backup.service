@@ -1,0 +1,16 @@
+[Unit]
+Description=Pool table daily encrypted backup
+After=pooltable.service
+
+[Service]
+User=pooltable
+WorkingDirectory=/opt/pooltable
+EnvironmentFile=/opt/pooltable/.env
+ExecStart=/usr/bin/node --disable-warning=ExperimentalWarning scripts/backup.ts --daemon
+Restart=always
+RestartSec=30
+ReadWritePaths=/opt/pooltable/data /opt/pooltable/backups
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

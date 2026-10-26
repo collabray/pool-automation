@@ -1,0 +1,14 @@
+# Linux laptop auto-start (user service):  mkdir -p ~/.config/systemd/user && cp this file there && systemctl --user enable --now pooltable-user && loginctl enable-linger $USER
+[Unit]
+Description=Pool table payment server (laptop)
+After=network-online.target
+
+[Service]
+WorkingDirectory=%h/pooltable
+EnvironmentFile=%h/pooltable/.env
+ExecStart=/usr/bin/node --disable-warning=ExperimentalWarning src/server/main.ts
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target

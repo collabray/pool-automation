@@ -1,0 +1,860 @@
+
+> pooltable-payments@1.0.0-rc1 test
+> node --disable-warning=ExperimentalWarning --test --test-concurrency=1 "tests/**/*.test.ts"
+
+TAP version 13
+# Subtest: backup: encrypted at rest, restores to an identical, verified database; wrong key / tampering / junk are refused
+ok 1 - backup: encrypted at rest, restores to an identical, verified database; wrong key / tampering / junk are refused
+  ---
+  duration_ms: 62.079433
+  type: 'test'
+  ...
+# Subtest: backup: a restore whose content fails verification is never put in place
+ok 2 - backup: a restore whose content fails verification is never put in place
+  ---
+  duration_ms: 36.234865
+  type: 'test'
+  ...
+# Subtest: backup: retention prunes old files only; backups are consistent while writes continue
+ok 3 - backup: retention prunes old files only; backups are consistent while writes continue
+  ---
+  duration_ms: 76.225258
+  type: 'test'
+  ...
+# Subtest: cash: blocked without an open shift; works after opening; one open shift per attendant
+ok 4 - cash: blocked without an open shift; works after opening; one open shift per attendant
+  ---
+  duration_ms: 27.309263
+  type: 'test'
+  ...
+# Subtest: cash: remainder policies. HOLD keeps table credit, REFUND gives change, REJECT refuses (and burns no receipt number)
+ok 5 - cash: remainder policies. HOLD keeps table credit, REFUND gives change, REJECT refuses (and burns no receipt number)
+  ---
+  duration_ms: 42.442027
+  type: 'test'
+  ...
+# Subtest: cash: duplicate sale (same idempotency key) returns the original receipt, no extra credits
+ok 6 - cash: duplicate sale (same idempotency key) returns the original receipt, no extra credits
+  ---
+  duration_ms: 16.118329
+  type: 'test'
+  ...
+# Subtest: cash: receipt numbers are sequential with no gaps across sales, failures and voids
+ok 7 - cash: receipt numbers are sequential with no gaps across sales, failures and voids
+  ---
+  duration_ms: 14.99087
+  type: 'test'
+  ...
+# Subtest: cash: discounts need a reason and respect limits; above the limit needs a different manager
+ok 8 - cash: discounts need a reason and respect limits; above the limit needs a different manager
+  ---
+  duration_ms: 14.64891
+  type: 'test'
+  ...
+# Subtest: cash: void needs reason, own sale, open shift, unvended games, and approval above the attendant limit
+ok 9 - cash: void needs reason, own sale, open shift, unvended games, and approval above the attendant limit
+  ---
+  duration_ms: 26.501479
+  type: 'test'
+  ...
+# Subtest: failed vend: manager refund keeps the ledger balanced and the refund shows in attendant refund stats
+ok 10 - failed vend: manager refund keeps the ledger balanced and the refund shows in attendant refund stats
+  ---
+  duration_ms: 27.336596
+  type: 'test'
+  ...
+# Subtest: shift close: expected vs counted, variance saved and flagged above threshold; closed shifts immutable
+ok 11 - shift close: expected vs counted, variance saved and flagged above threshold; closed shifts immutable
+  ---
+  duration_ms: 30.62554
+  type: 'test'
+  ...
+# Subtest: cash: offline queue is off by default, capped when on, and idempotent on sync
+ok 12 - cash: offline queue is off by default, capped when on, and idempotent on sync
+  ---
+  duration_ms: 22.647681
+  type: 'test'
+  ...
+# Subtest: vouchers: codes stored hashed, single use, table-restricted, voidable, normalised input
+ok 13 - vouchers: codes stored hashed, single use, table-restricted, voidable, normalised input
+  ---
+  duration_ms: 29.135301
+  type: 'test'
+  ...
+# Subtest: vouchers: guessing is rate limited per IP
+ok 14 - vouchers: guessing is rate limited per IP
+  ---
+  duration_ms: 22.720689
+  type: 'test'
+  ...
+# Subtest: analytics: attendant stats (by method/table/hour, voids, variances), money hidden when not permitted, own-data scoping
+ok 15 - analytics: attendant stats (by method/table/hour, voids, variances), money hidden when not permitted, own-data scoping
+  ---
+  duration_ms: 30.255029
+  type: 'test'
+  ...
+# Subtest: analytics: period ranges (Nairobi midnight, Monday weeks) and owner summary
+ok 16 - analytics: period ranges (Nairobi midnight, Monday weeks) and owner summary
+  ---
+  duration_ms: 23.628447
+  type: 'test'
+  ...
+# Subtest: csv export escapes quotes/commas and neutralises spreadsheet formulas
+ok 17 - csv export escapes quotes/commas and neutralises spreadsheet formulas
+  ---
+  duration_ms: 0.320742
+  type: 'test'
+  ...
+# Subtest: concurrency: 10 parallel redemptions of one voucher => exactly one success
+ok 18 - concurrency: 10 parallel redemptions of one voucher => exactly one success
+  ---
+  duration_ms: 2105.919422
+  type: 'test'
+  ...
+# Subtest: concurrency: parallel duplicate cash sales (double tap on Confirm) create exactly one sale
+ok 19 - concurrency: parallel duplicate cash sales (double tap on Confirm) create exactly one sale
+  ---
+  duration_ms: 582.743775
+  type: 'test'
+  ...
+# Subtest: concurrency: 20 parallel duplicate STK callbacks across connections credit exactly once (KES 100 = 5 games)
+ok 20 - concurrency: 20 parallel duplicate STK callbacks across connections credit exactly once (KES 100 = 5 games)
+  ---
+  duration_ms: 524.624138
+  type: 'test'
+  ...
+# Subtest: 100 parallel duplicate callbacks for one KES 100 receipt credit exactly 5 games, once
+ok 21 - 100 parallel duplicate callbacks for one KES 100 receipt credit exactly 5 games, once
+  ---
+  duration_ms: 789.827351
+  type: 'test'
+  ...
+# Subtest: 50 parallel vend requests with 5 credits (ALL mode) create exactly 5 vends
+ok 22 - 50 parallel vend requests with 5 credits (ALL mode) create exactly 5 vends
+  ---
+  duration_ms: 862.643815
+  type: 'test'
+  ...
+# Subtest: 50 parallel vend requests in ONE mode create exactly 1 vend
+ok 23 - 50 parallel vend requests in ONE mode create exactly 1 vend
+  ---
+  duration_ms: 816.727127
+  type: 'test'
+  ...
+# Subtest: parallel duplicate cash sales with one idempotency key credit once
+ok 24 - parallel duplicate cash sales with one idempotency key credit once
+  ---
+  duration_ms: 788.195002
+  type: 'test'
+  ...
+# Subtest: generic idempotency layer: 50 parallel identical requests run the effect once
+ok 25 - generic idempotency layer: 50 parallel identical requests run the effect once
+  ---
+  duration_ms: 844.195991
+  type: 'test'
+  ...
+# Subtest: payments racing with dispatch: games issued always equals vended + inflight + available
+ok 26 - payments racing with dispatch: games issued always equals vended + inflight + available
+  ---
+  duration_ms: 612.482192
+  type: 'test'
+  ...
+# Subtest: wizard: test vend requires an online device, then releases through the signed protocol
+ok 27 - wizard: test vend requires an online device, then releases through the signed protocol
+  ---
+  duration_ms: 315.365022
+  type: 'test'
+  ...
+# Subtest: QR: printable SVG is served to managers only and encodes the signed table URL
+ok 28 - QR: printable SVG is served to managers only and encodes the signed table URL
+  ---
+  duration_ms: 35.137675
+  type: 'test'
+  ...
+# Subtest: E2E customer: scan QR -> info -> STK -> callback -> credits -> signed vend -> device ack -> balls released screen
+ok 29 - E2E customer: scan QR -> info -> STK -> callback -> credits -> signed vend -> device ack -> balls released screen
+  ---
+  duration_ms: 51.533037
+  type: 'test'
+  ...
+# Subtest: E2E long-poll: a payment arriving while the device waits wakes it immediately
+ok 30 - E2E long-poll: a payment arriving while the device waits wakes it immediately
+  ---
+  duration_ms: 308.97594
+  type: 'test'
+  ...
+# Subtest: E2E device resilience: lost ack + reboot never produce a second release
+ok 31 - E2E device resilience: lost ack + reboot never produce a second release
+  ---
+  duration_ms: 18.993956
+  type: 'test'
+  ...
+# Subtest: E2E device: sensor fault rejects the command -> vend FAILED, table faulted, customers blocked BEFORE paying, retry recovers
+ok 32 - E2E device: sensor fault rejects the command -> vend FAILED, table faulted, customers blocked BEFORE paying, retry recovers
+  ---
+  duration_ms: 27.922995
+  type: 'test'
+  ...
+# Subtest: E2E attendant: PIN login -> open shift -> cash -> credit -> vend -> close shift with correct variance; own stats only
+ok 33 - E2E attendant: PIN login -> open shift -> cash -> credit -> vend -> close shift with correct variance; own stats only
+  ---
+  duration_ms: 177.075565
+  type: 'test'
+  ...
+# Subtest: E2E owner app: remote open releases the game; offline table is refused with a clear reason
+ok 34 - E2E owner app: remote open releases the game; offline table is refused with a clear reason
+  ---
+  duration_ms: 16.555363
+  type: 'test'
+  ...
+# Subtest: E2E coins: device-reported coins are logged once, collection flags a mismatch, tamper raises an alert
+ok 35 - E2E coins: device-reported coins are logged once, collection flags a mismatch, tamper raises an alert
+  ---
+  duration_ms: 18.588311
+  type: 'test'
+  ...
+# Subtest: E2E shared till over HTTP: a drink payment callback never vends; owner assigns it with a reason
+ok 36 - E2E shared till over HTTP: a drink payment callback never vends; owner assigns it with a reason
+  ---
+  duration_ms: 14.465221
+  type: 'test'
+  ...
+# Subtest: E2E OTA: owner uploads a signed image, devices are told about it, download is authenticated and byte-exact; versions are immutable
+ok 37 - E2E OTA: owner uploads a signed image, devices are told about it, download is authenticated and byte-exact; versions are immutable
+  ---
+  duration_ms: 194.184321
+  type: 'test'
+  ...
+# Subtest: E2E physical button is a server-authorised request: ignored+alerted when disabled, limited to 3/hour when enabled
+ok 38 - E2E physical button is a server-authorised request: ignored+alerted when disabled, limited to 3/hour when enabled
+  ---
+  duration_ms: 39.749302
+  type: 'test'
+  ...
+# Subtest: ledger: balanced posting works; unbalanced, single-entry, zero and float rejected; immutable
+ok 39 - ledger: balanced posting works; unbalanced, single-entry, zero and float rejected; immutable
+  ---
+  duration_ms: 14.029758
+  type: 'test'
+  ...
+# Subtest: ledger: balances that must not go negative are guarded and the posting rolls back
+ok 40 - ledger: balances that must not go negative are guarded and the posting rolls back
+  ---
+  duration_ms: 9.496069
+  type: 'test'
+  ...
+# Subtest: audit: chain verifies, UPDATE/DELETE blocked, tampering and deletion detected
+ok 41 - audit: chain verifies, UPDATE/DELETE blocked, tampering and deletion detected
+  ---
+  duration_ms: 23.561612
+  type: 'test'
+  ...
+# Subtest: idempotency: runs once, replays stored result, rejects key reuse with different body, rolls back on failure
+ok 42 - idempotency: runs once, replays stored result, rejects key reuse with different body, rolls back on failure
+  ---
+  duration_ms: 11.133844
+  type: 'test'
+  ...
+# Subtest: credit: KES 100 = exactly 5 game credits, ledger balanced, revenue recorded
+ok 43 - credit: KES 100 = exactly 5 game credits, ledger balanced, revenue recorded
+  ---
+  duration_ms: 11.690424
+  type: 'test'
+  ...
+# Subtest: credit: duplicate receipt or key never credits twice; mismatched reuse is an error
+ok 44 - credit: duplicate receipt or key never credits twice; mismatched reuse is an error
+  ---
+  duration_ms: 12.052417
+  type: 'test'
+  ...
+# Subtest: credit: same receipt number in different namespaces (cash vs M-Pesa) is allowed
+ok 45 - credit: same receipt number in different namespaces (cash vs M-Pesa) is allowed
+  ---
+  duration_ms: 11.722498
+  type: 'test'
+  ...
+# Subtest: credit: remainder HOLD_CREDIT holds, and held credit is applied to the next payment
+ok 46 - credit: remainder HOLD_CREDIT holds, and held credit is applied to the next payment
+  ---
+  duration_ms: 13.711886
+  type: 'test'
+  ...
+# Subtest: credit: remainder REFUND books refund-due; REJECT writes nothing but an audit entry
+ok 47 - credit: remainder REFUND books refund-due; REJECT writes nothing but an audit entry
+  ---
+  duration_ms: 13.384145
+  type: 'test'
+  ...
+# Subtest: credit: STK flow with exact games; underpayment rejected; bundle pricing applies
+ok 48 - credit: STK flow with exact games; underpayment rejected; bundle pricing applies
+  ---
+  duration_ms: 11.333606
+  type: 'test'
+  ...
+# Subtest: vend: happy path ONE mode, signed command verifies with device secret, ack confirms, ledger consistent
+ok 49 - vend: happy path ONE mode, signed command verifies with device secret, ack confirms, ledger consistent
+  ---
+  duration_ms: 15.814812
+  type: 'test'
+  ...
+# Subtest: vend: queue ordering is FIFO by seq; ALL mode releases everything at once
+ok 50 - vend: queue ordering is FIFO by seq; ALL mode releases everything at once
+  ---
+  duration_ms: 16.594742
+  type: 'test'
+  ...
+# Subtest: vend: bad signature, unknown nonce rejected; illegal transitions rejected
+ok 51 - vend: bad signature, unknown nonce rejected; illegal transitions rejected
+  ---
+  duration_ms: 13.569532
+  type: 'test'
+  ...
+# Subtest: vend: sensor-confirm tables wait for CONFIRMED; ready gating releases next credit only when ready
+ok 52 - vend: sensor-confirm tables wait for CONFIRMED; ready gating releases next credit only when ready
+  ---
+  duration_ms: 15.445847
+  type: 'test'
+  ...
+# Subtest: vend: offline table stores credits, releases on reconnect, nothing lost
+ok 53 - vend: offline table stores credits, releases on reconnect, nothing lost
+  ---
+  duration_ms: 11.546713
+  type: 'test'
+  ...
+# Subtest: vend: power loss mid-vend. Reconnect re-issues the SAME vend id with a new nonce, never a second vend
+ok 54 - vend: power loss mid-vend. Reconnect re-issues the SAME vend id with a new nonce, never a second vend
+  ---
+  duration_ms: 29.015028
+  type: 'test'
+  ...
+# Subtest: vend: timeout retries then FAILED with alert, table FAULTED, next game blocked
+ok 55 - vend: timeout retries then FAILED with alert, table FAULTED, next game blocked
+  ---
+  duration_ms: 12.970366
+  type: 'test'
+  ...
+# Subtest: vend: FAILED then RETRY / KEEP_CREDIT / REFUND all keep ledger balanced and never create extra vends
+ok 56 - vend: FAILED then RETRY / KEEP_CREDIT / REFUND all keep ledger balanced and never create extra vends
+  ---
+  duration_ms: 39.67662
+  type: 'test'
+  ...
+# Subtest: vend: late ack after FAILED proves the device vended: vend becomes CONFIRMED, no refund possible
+ok 57 - vend: late ack after FAILED proves the device vended: vend becomes CONFIRMED, no refund possible
+  ---
+  duration_ms: 12.37744
+  type: 'test'
+  ...
+# Subtest: vend: device REJECT fails the vend immediately
+ok 58 - vend: device REJECT fails the vend immediately
+  ---
+  duration_ms: 11.561034
+  type: 'test'
+  ...
+# Subtest: vend: faulted/disabled tables do not dispatch but still accept payment (paid games are never lost)
+ok 59 - vend: faulted/disabled tables do not dispatch but still accept payment (paid games are never lost)
+  ---
+  duration_ms: 12.868139
+  type: 'test'
+  ...
+# Subtest: monitor: silent device goes offline with an alert; credits waiting while offline alert once; vend failures and rate alerts
+ok 60 - monitor: silent device goes offline with an alert; credits waiting while offline alert once; vend failures and rate alerts
+  ---
+  duration_ms: 37.206104
+  type: 'test'
+  ...
+# Subtest: power cycling: three reboots within an hour raise an alert; alert dedupe and resolve work
+ok 61 - power cycling: three reboots within an hour raise an alert; alert dedupe and resolve work
+  ---
+  duration_ms: 13.195676
+  type: 'test'
+  ...
+# Subtest: coins: idempotent counting, ledger postings, collection variance (short and over) is flagged
+ok 62 - coins: idempotent counting, ledger postings, collection variance (short and over) is flagged
+  ---
+  duration_ms: 13.378896
+  type: 'test'
+  ...
+# Subtest: notifications: webhook (HMAC-signed), Telegram and Africa's Talking SMS receive the alert; a failing channel does not block the others
+ok 63 - notifications: webhook (HMAC-signed), Telegram and Africa's Talking SMS receive the alert; a failing channel does not block the others
+  ---
+  duration_ms: 96.658756
+  type: 'test'
+  ...
+# Subtest: notifications: SMTP email (AUTH LOGIN) is delivered and header injection is neutralised
+ok 64 - notifications: SMTP email (AUTH LOGIN) is delivered and header injection is neutralised
+  ---
+  duration_ms: 9.408718
+  type: 'test'
+  ...
+# Subtest: pdf: structurally valid (xref offsets point at objects), paginates, escapes text
+ok 65 - pdf: structurally valid (xref offsets point at objects), paginates, escapes text
+  ---
+  duration_ms: 170.418522
+  type: 'test'
+  ...
+# Subtest: qr: structural checks and decode round-trip via OpenCV when available
+ok 66 - qr: structural checks and decode round-trip via OpenCV when available
+  ---
+  duration_ms: 765.033931
+  type: 'test'
+  ...
+# Subtest: retention: old phone numbers are scrubbed, in-flight requests are left alone
+ok 67 - retention: old phone numbers are scrubbed, in-flight requests are left alone
+  ---
+  duration_ms: 13.666494
+  type: 'test'
+  ...
+# Subtest: daraja: timestamp is EAT, password per spec, config round-trips encrypted
+ok 68 - daraja: timestamp is EAT, password per spec, config round-trips encrypted
+  ---
+  duration_ms: 28.084812
+  type: 'test'
+  ...
+# Subtest: daraja: token cached, refreshed after expiry; test-connection reports good and bad credentials
+ok 69 - daraja: token cached, refreshed after expiry; test-connection reports good and bad credentials
+  ---
+  duration_ms: 41.608872
+  type: 'test'
+  ...
+# Subtest: STK success: push for exact amount, phone normalised, callback credits 5 games, receipt shown
+ok 70 - STK success: push for exact amount, phone normalised, callback credits 5 games, receipt shown
+  ---
+  duration_ms: 64.685568
+  type: 'test'
+  ...
+# Subtest: STK: Till transaction type is passed through
+ok 71 - STK: Till transaction type is passed through
+  ---
+  duration_ms: 20.438956
+  type: 'test'
+  ...
+# Subtest: STK double tap: identical idempotency key sent in parallel and again later => exactly one push
+ok 72 - STK double tap: identical idempotency key sent in parallel and again later => exactly one push
+  ---
+  duration_ms: 43.514504
+  type: 'test'
+  ...
+# Subtest: STK user outcomes: cancelled, wrong PIN, insufficient funds, timeout, then retry works
+ok 73 - STK user outcomes: cancelled, wrong PIN, insufficient funds, timeout, then retry works
+  ---
+  duration_ms: 59.96119
+  type: 'test'
+  ...
+# Subtest: STK blocks before payment when table offline, faulted or disabled; no push is sent
+ok 74 - STK blocks before payment when table offline, faulted or disabled; no push is sent
+  ---
+  duration_ms: 15.538858
+  type: 'test'
+  ...
+# Subtest: STK validation: bad phone, game limits; rate limits per phone/cooldown/ip/table
+ok 75 - STK validation: bad phone, game limits; rate limits per phone/cooldown/ip/table
+  ---
+  duration_ms: 28.818154
+  type: 'test'
+  ...
+# Subtest: STK: Daraja rejection => FAILED; ambiguous network failure => FAILED + owner alert, never a silent loss
+ok 76 - STK: Daraja rejection => FAILED; ambiguous network failure => FAILED + owner alert, never a silent loss
+  ---
+  duration_ms: 26.452057
+  type: 'test'
+  ...
+# Subtest: late callback after timeout still credits correctly
+ok 77 - late callback after timeout still credits correctly
+  ---
+  duration_ms: 17.742644
+  type: 'test'
+  ...
+# Subtest: lost callback: reconciler queries Daraja and credits; a later real callback does not double credit
+ok 78 - lost callback: reconciler queries Daraja and credits; a later real callback does not double credit
+  ---
+  duration_ms: 22.553946
+  type: 'test'
+  ...
+# Subtest: reconciler: processing => exponential backoff, no credit; failed query => terminal status; stale expires
+ok 79 - reconciler: processing => exponential backoff, no credit; failed query => terminal status; stale expires
+  ---
+  duration_ms: 24.168399
+  type: 'test'
+  ...
+# Subtest: duplicate callbacks credit once
+ok 80 - duplicate callbacks credit once
+  ---
+  duration_ms: 20.601826
+  type: 'test'
+  ...
+# Subtest: wrong amount, wrong phone, unknown CheckoutRequestID => unallocated, never vend
+ok 81 - wrong amount, wrong phone, unknown CheckoutRequestID => unallocated, never vend
+  ---
+  duration_ms: 21.897367
+  type: 'test'
+  ...
+# Subtest: callback shape validation and forged-callback origin checks
+ok 82 - callback shape validation and forged-callback origin checks
+  ---
+  duration_ms: 14.384733
+  type: 'test'
+  ...
+# Subtest: success claim on an already-CANCELLED request: STK Query disagrees => nothing credited, owner alerted
+ok 83 - success claim on an already-CANCELLED request: STK Query disagrees => nothing credited, owner alerted
+  ---
+  duration_ms: 18.012692
+  type: 'test'
+  ...
+# Subtest: reversal: unvended credits removed; after play, loss is booked and owner alerted; ledger stays balanced
+ok 84 - reversal: unvended credits removed; after play, loss is booked and owner alerted; ledger stays balanced
+  ---
+  duration_ms: 79.409105
+  type: 'test'
+  ...
+# Subtest: shared till: KES 20 drink payment (no pending request) never vends and lands in unallocated
+ok 85 - shared till: KES 20 drink payment (no pending request) never vends and lands in unallocated
+  ---
+  duration_ms: 12.215643
+  type: 'test'
+  ...
+# Subtest: shared till: C2B on a Till NEVER vends, even with auto-credit ON and a valid code
+ok 86 - shared till: C2B on a Till NEVER vends, even with auto-credit ON and a valid code
+  ---
+  duration_ms: 12.145925
+  type: 'test'
+  ...
+# Subtest: shared till: Paybill C2B vends only with auto-credit ON + valid signed code; wrong/missing/forged code never vends
+ok 87 - shared till: Paybill C2B vends only with auto-credit ON + valid signed code; wrong/missing/forged code never vends
+  ---
+  duration_ms: 15.465821
+  type: 'test'
+  ...
+# Subtest: shared till: a C2B echo of an STK payment does not credit twice
+ok 88 - shared till: a C2B echo of an STK payment does not credit twice
+  ---
+  duration_ms: 17.491938
+  type: 'test'
+  ...
+# Subtest: manual assignment: role-limited, reason required, audit-logged, idempotent, ledger-correct; reports separate unallocated
+ok 89 - manual assignment: role-limited, reason required, audit-logged, idempotent, ledger-correct; reports separate unallocated
+  ---
+  duration_ms: 15.36243
+  type: 'test'
+  ...
+# Subtest: authentication: missing, garbage, tampered, alg=none and expired tokens are all rejected
+ok 90 - authentication: missing, garbage, tampered, alg=none and expired tokens are all rejected
+  ---
+  duration_ms: 714.136215
+  type: 'test'
+  ...
+# Subtest: RBAC: attendants and managers are refused on every higher-privilege route
+ok 91 - RBAC: attendants and managers are refused on every higher-privilege route
+  ---
+  duration_ms: 106.082008
+  type: 'test'
+  ...
+# Subtest: IDOR: an attendant can only see and void their own data
+ok 92 - IDOR: an attendant can only see and void their own data
+  ---
+  duration_ms: 17.23367
+  type: 'test'
+  ...
+# Subtest: mass assignment and schema strictness: unknown or privileged fields are rejected, types enforced
+ok 93 - mass assignment and schema strictness: unknown or privileged fields are rejected, types enforced
+  ---
+  duration_ms: 24.214775
+  type: 'test'
+  ...
+# Subtest: transport hygiene: body limit, content type, malformed JSON, security headers, CORS, no stack leaks
+ok 94 - transport hygiene: body limit, content type, malformed JSON, security headers, CORS, no stack leaks
+  ---
+  duration_ms: 19.181264
+  type: 'test'
+  ...
+# Subtest: static files: security headers apply, path traversal is blocked
+ok 95 - static files: security headers apply, path traversal is blocked
+  ---
+  duration_ms: 7.050758
+  type: 'test'
+  ...
+# Subtest: injection: SQL metacharacters in logins, codes and ids change nothing
+ok 96 - injection: SQL metacharacters in logins, codes and ids change nothing
+  ---
+  duration_ms: 237.430349
+  type: 'test'
+  ...
+# Subtest: login: lockout after repeated failures, generic errors, refresh rotation with reuse detection
+ok 97 - login: lockout after repeated failures, generic errors, refresh rotation with reuse detection
+  ---
+  duration_ms: 899.167275
+  type: 'test'
+  ...
+# Subtest: login brute force is rate limited per username
+ok 98 - login brute force is rate limited per username
+  ---
+  duration_ms: 744.116987
+  type: 'test'
+  ...
+# Subtest: sessions die on deactivation and credential change
+ok 99 - sessions die on deactivation and credential change
+  ---
+  duration_ms: 390.907545
+  type: 'test'
+  ...
+# Subtest: weak credentials are refused
+ok 100 - weak credentials are refused
+  ---
+  duration_ms: 9.699289
+  type: 'test'
+  ...
+# Subtest: TOTP: once enabled the password alone no longer logs in
+ok 101 - TOTP: once enabled the password alone no longer logs in
+  ---
+  duration_ms: 226.016387
+  type: 'test'
+  ...
+# Subtest: forged payment callbacks: wrong token, unknown checkout and malformed bodies never credit
+ok 102 - forged payment callbacks: wrong token, unknown checkout and malformed bodies never credit
+  ---
+  duration_ms: 21.74041
+  type: 'test'
+  ...
+# Subtest: secrets are never returned by the API
+ok 103 - secrets are never returned by the API
+  ---
+  duration_ms: 8.272354
+  type: 'test'
+  ...
+# Subtest: public endpoints are rate limited
+ok 104 - public endpoints are rate limited
+  ---
+  duration_ms: 74.852856
+  type: 'test'
+  ...
+# Subtest: device auth: valid signature works; bad signature, wrong secret, unknown device, stale time and replay are refused
+ok 105 - device auth: valid signature works; bad signature, wrong secret, unknown device, stale time and replay are refused
+  ---
+  duration_ms: 21.948112
+  type: 'test'
+  ...
+# Subtest: device cannot be tricked into vending: a customer/attendant token is not a device credential and credits are server-side only
+ok 106 - device cannot be tricked into vending: a customer/attendant token is not a device credential and credits are server-side only
+  ---
+  duration_ms: 3.005749
+  type: 'test'
+  ...
+# Subtest: privacy: export and erase de-identify a customer while keeping the financial records
+ok 107 - privacy: export and erase de-identify a customer while keeping the financial records
+  ---
+  duration_ms: 18.492936
+  type: 'test'
+  ...
+# Subtest: manager approvals: over-limit actions need a single-use token earned with the manager's real credentials
+ok 108 - manager approvals: over-limit actions need a single-use token earned with the manager's real credentials
+  ---
+  duration_ms: 524.199014
+  type: 'test'
+  ...
+# Subtest: POS helpers: quote follows the table policy; SMS receipts go through the configured gateway
+ok 109 - POS helpers: quote follows the table policy; SMS receipts go through the configured gateway
+  ---
+  duration_ms: 25.072264
+  type: 'test'
+  ...
+# Subtest: payment reversal over the API: owner only, needs a reason, idempotent, reverses unplayed credits
+ok 110 - payment reversal over the API: owner only, needs a reason, idempotent, reverses unplayed credits
+  ---
+  duration_ms: 10.624625
+  type: 'test'
+  ...
+# Subtest: refunding a failed release respects the attendant limit and needs manager approval above it
+ok 111 - refunding a failed release respects the attendant limit and needs manager approval above it
+  ---
+  duration_ms: 90.065341
+  type: 'test'
+  ...
+# Subtest: money: integers only, formatting, mpesa conversion
+ok 112 - money: integers only, formatting, mpesa conversion
+  ---
+  duration_ms: 1.930635
+  type: 'test'
+  ...
+# Subtest: phone: every accepted format normalises to 254XXXXXXXXX
+ok 113 - phone: every accepted format normalises to 254XXXXXXXXX
+  ---
+  duration_ms: 0.287901
+  type: 'test'
+  ...
+# Subtest: phone: invalid inputs rejected
+ok 114 - phone: invalid inputs rejected
+  ---
+  duration_ms: 0.30351
+  type: 'test'
+  ...
+# Subtest: phone: hash is keyed and stable; mask hides middle
+ok 115 - phone: hash is keyed and stable; mask hides middle
+  ---
+  duration_ms: 0.51754
+  type: 'test'
+  ...
+# Subtest: pricing: KES 20 / 40 / 100 / custom without bundles
+ok 116 - pricing: KES 20 / 40 / 100 / custom without bundles
+  ---
+  duration_ms: 1.247288
+  type: 'test'
+  ...
+# Subtest: pricing: bundle 6 games for KES 100
+ok 117 - pricing: bundle 6 games for KES 100
+  ---
+  duration_ms: 0.362972
+  type: 'test'
+  ...
+# Subtest: pricing: bounds and config validation
+ok 118 - pricing: bounds and config validation
+  ---
+  duration_ms: 0.221206
+  type: 'test'
+  ...
+# Subtest: pricing: peak/off-peak windows incl. midnight wrap (Nairobi UTC+3)
+ok 119 - pricing: peak/off-peak windows incl. midnight wrap (Nairobi UTC+3)
+  ---
+  duration_ms: 0.163064
+  type: 'test'
+  ...
+# Subtest: crypto: round trip, tamper and wrong key fail
+ok 120 - crypto: round trip, tamper and wrong key fail
+  ---
+  duration_ms: 0.870082
+  type: 'test'
+  ...
+# Subtest: vend state machine: every pair checked against the table; terminals have no exits
+ok 121 - vend state machine: every pair checked against the table; terminals have no exits
+  ---
+  duration_ms: 0.631736
+  type: 'test'
+  ...
+# Subtest: command: valid signature accepted once, replay rejected
+ok 122 - command: valid signature accepted once, replay rejected
+  ---
+  duration_ms: 0.379753
+  type: 'test'
+  ...
+# Subtest: command: any tampered field or wrong key fails signature
+ok 123 - command: any tampered field or wrong key fails signature
+  ---
+  duration_ms: 0.417194
+  type: 'test'
+  ...
+# Subtest: command: expiry and drift window; failed checks do not burn the nonce
+ok 124 - command: expiry and drift window; failed checks do not burn the nonce
+  ---
+  duration_ms: 0.10933
+  type: 'test'
+  ...
+# Subtest: ack: sign/verify, tamper detected
+ok 125 - ack: sign/verify, tamper detected
+  ---
+  duration_ms: 0.187196
+  type: 'test'
+  ...
+# Subtest: vend params: per-mode defaults and max-pulse guard
+ok 126 - vend params: per-mode defaults and max-pulse guard
+  ---
+  duration_ms: 0.190465
+  type: 'test'
+  ...
+# Subtest: web phone normalisation matches the server for every format and rejects the same invalid inputs
+ok 127 - web phone normalisation matches the server for every format and rejects the same invalid inputs
+  ---
+  duration_ms: 0.89384
+  type: 'test'
+  ...
+# Subtest: money formatting is integer-based and readable
+ok 128 - money formatting is integer-based and readable
+  ---
+  duration_ms: 0.436258
+  type: 'test'
+  ...
+# Subtest: i18n: every customer-page key exists in Swahili, fallback and variables work, language detection
+ok 129 - i18n: every customer-page key exists in Swahili, fallback and variables work, language detection
+  ---
+  duration_ms: 0.581599
+  type: 'test'
+  ...
+# Subtest: pricing form: bundles and peak rules round-trip and bad input gives clear errors
+ok 130 - pricing form: bundles and peak rules round-trip and bad input gives clear errors
+  ---
+  duration_ms: 2.352099
+  type: 'test'
+  ...
+# Subtest: CSP compliance: no inline scripts/styles/handlers, only same-origin assets that exist, no dangerous DOM sinks
+ok 131 - CSP compliance: no inline scripts/styles/handlers, only same-origin assets that exist, no dangerous DOM sinks
+  ---
+  duration_ms: 1.878943
+  type: 'test'
+  ...
+# Subtest: api client: login, silent refresh on 401 with rotation, single-flight refresh, idempotency header, logout
+ok 132 - api client: login, silent refresh on 401 with rotation, single-flight refresh, idempotency header, logout
+  ---
+  duration_ms: 359.764283
+  type: 'test'
+  ...
+# Subtest: customer page: pick games, pay once (double tap safe), see the PIN prompt, then the success screen with receipt; Swahili toggle
+ok 133 - customer page: pick games, pay once (double tap safe), see the PIN prompt, then the success screen with receipt; Swahili toggle
+  ---
+  duration_ms: 405.017615
+  type: 'test'
+  ...
+# Subtest: customer page: failure states each show a plain-language message with Try again; a retry uses a new idempotency key
+ok 134 - customer page: failure states each show a plain-language message with Try again; a retry uses a new idempotency key
+  ---
+  duration_ms: 76.120058
+  type: 'test'
+  ...
+# Subtest: customer page: offline and faulted tables block payment BEFORE paying; rate limit message; bad QR code
+ok 135 - customer page: offline and faulted tables block payment BEFORE paying; rate limit message; bad QR code
+  ---
+  duration_ms: 63.987487
+  type: 'test'
+  ...
+# Subtest: customer page: voucher redemption and Paybill details
+ok 136 - customer page: voucher redemption and Paybill details
+  ---
+  duration_ms: 19.703812
+  type: 'test'
+  ...
+# Subtest: customer page: kiosk mode returns to the form by itself after success
+ok 137 - customer page: kiosk mode returns to the form by itself after success
+  ---
+  duration_ms: 21.162166
+  type: 'test'
+  ...
+# Subtest: POS: PIN login, shift gate, quote preview, one sale despite double tap, receipt, manager approval for a big discount, void, my day, blind shift close
+ok 138 - POS: PIN login, shift gate, quote preview, one sale despite double tap, receipt, manager approval for a big discount, void, my day, blind shift close
+  ---
+  duration_ms: 475.939035
+  type: 'test'
+  ...
+# Subtest: owner app: sign in, see money earned and games, open a table remotely; attendants are refused
+ok 139 - owner app: sign in, see money earned and games, open a table remotely; attendants are refused
+  ---
+  duration_ms: 266.588938
+  type: 'test'
+  ...
+# Subtest: admin: first-run wizard end to end (owner -> Daraja test -> table -> enrol controller -> test release -> QR), then every tab renders
+ok 140 - admin: first-run wizard end to end (owner -> Daraja test -> table -> enrol controller -> test release -> QR), then every tab renders
+  ---
+  duration_ms: 505.819508
+  type: 'test'
+  ...
+# Subtest: QR sheet: renders a scannable data-URL image per table for managers
+ok 141 - QR sheet: renders a scannable data-URL image per table for managers
+  ---
+  duration_ms: 118.994207
+  type: 'test'
+  ...
+1..141
+# tests 141
+# suites 0
+# pass 141
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 21120.276507

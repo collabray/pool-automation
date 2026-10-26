@@ -1,0 +1,1 @@
+{ "name": "pooltable_core", "version": "0.1.0", "description": "Portable protocol, vend sequencing and coin counting logic (no Arduino dependencies)", "build": { "flags": ["-std=gnu++17"] } }
