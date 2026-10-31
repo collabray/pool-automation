@@ -54,17 +54,22 @@ sequenceDiagram
     participant S as Server
     participant D as Daraja
     participant E as ESP32
-    C->>S: Pay 5 games with idempotency key and phone
-    S->>S: Check table online, price, and rate limits; save request
+    C->>S: Pay 5 games with idempotency key
+    S->>S: Check table online
+    S->>S: Check price and rate limits
+    S->>S: Save request
     S->>D: STK Push exact amount
     D-->>C: Enter M-Pesa PIN
     C->>D: PIN
     D->>S: Callback with receipt
-    S->>S: Match request, amount, and phone; credit once with unique receipt
+    S->>S: Match request amount and phone
+    S->>S: Credit once with unique receipt
     S->>E: Send signed vend command
-    E->>E: Verify signature, expiry, nonce, and limits; remember vend ID and release
+    E->>E: Verify signature and expiry
+    E->>E: Check nonce and limits
+    E->>E: Remember vend ID and release
     E->>S: Signed ack
-    S-->>C: Payment received. Balls released, enjoy!
+    S-->>C: Payment received. Balls released.
     Note over S,D: If the callback is lost, the reconciler asks Daraja and credits anyway
 ```
 
