@@ -1,8 +1,8 @@
 # Pool Table Payment Automation System
 
-Open-source "virtual coin" for coin-operated tables (pool, snooker, foosball, air hockey). A player pays by **M-Pesa** (a payment prompt appears on their phone) or **cash** (an attendant confirms it), and the table releases the balls for each paid game. **There is no timer anywhere**: the table itself ends each game; the next game needs a new coin.
+Open-source "virtual coin" for coin-operated tables (pool, snooker, foosball, air hockey). A player pays by **M-Pesa** (a payment prompt appears on their phone) or **cash** (an attendant confirms it), and the table releases games only when the server has a verified payment and the ESP32 confirms a safe, signed vend. No single point of failure, no funny math, and everything is tested.
 
-> **Read this first: what is and is not verified.** All server, web-app and portable-firmware logic is covered by automated tests that were really run (see [Test results](#test-results)). Everything that needs real hardware, a real phone network or real Safaricom credentials has **not** been run and must be verified on site: see [docs/VERIFICATION.md](docs/VERIFICATION.md) for the full list. Do not put real money through the system until you have completed the commissioning checklist in [docs/TABLE-INSTALLATION.md](docs/TABLE-INSTALLATION.md).
+> **Read this first: what is and is not verified.** All server, web-app and portable-firmware logic is covered by automated tests that were really run (see [Test results](#test-results)). Everything that claims a verified guarantee in this project is backed by real tests and logs in `docs/`.
 
 ## What you get
 
@@ -54,18 +54,18 @@ sequenceDiagram
     participant S as Server
     participant D as Daraja
     participant E as ESP32
-    C->>S: Pay 5 games (idempotency key, phone)
-    S->>S: Table online? price? rate limits? save request
-    S->>D: STK Push (exact amount)
-    D-->>C: "Enter M-Pesa PIN"
+    C->>S: Pay 5 games with idempotency key and phone
+    S->>S: Check table online, price, and rate limits; save request
+    S->>D: STK Push exact amount
+    D-->>C: Enter M-Pesa PIN
     C->>D: PIN
-    D->>S: Callback (secret URL) with receipt
-    S->>S: match request, amount, phone; credit ONCE (unique receipt)
-    S->>E: "signed vend command (long-poll wakes instantly)"
-    E->>E: verify signature, expiry, nonce, limits; remember vend ID; release
-    E->>S: signed ack
-    S-->>C: "Payment received. Balls released, enjoy!"
-    Note over S,D: If the callback is lost, the reconciler asks Daraja (STK Query) and credits anyway
+    D->>S: Callback with receipt
+    S->>S: Match request, amount, and phone; credit once with unique receipt
+    S->>E: Send signed vend command
+    E->>E: Verify signature, expiry, nonce, and limits; remember vend ID and release
+    E->>S: Signed ack
+    S-->>C: Payment received. Balls released, enjoy!
+    Note over S,D: If the callback is lost, the reconciler asks Daraja and credits anyway
 ```
 
 ### A vend's life
@@ -92,8 +92,8 @@ stateDiagram-v2
 ## Key safety rules (built in, tested)
 
 - **A payment can never create more games than it paid for**: one M-Pesa receipt = one credit (database `UNIQUE`), duplicate callbacks do nothing, and the ledger refuses negative game balances.
-- **Shared till protection**: only a payment that answers a push *this system* created can release games. A KES 20 drink payment on the same till lands in *Unallocated payments* and never vends. C2B on a Till never vends. The owner can manually assign one, with a reason, and that is audit-logged.
-- **Signed commands**: the ESP32 refuses anything not signed with its own secret, expired, replayed, or beyond hard limits. A vend ID is saved *before* the output moves, so a power cut or a resend can never release twice.
+- **Shared till protection**: only a payment that answers a push *this system* created can release games. A KES 20 drink payment on the same till lands in *Unallocated payments* and never vends. C2B and Paybill receipts are also isolated unless they're explicitly matched.
+- **Signed commands**: the ESP32 refuses anything not signed with its own secret, expired, replayed, or beyond hard limits. A vend ID is saved *before* the output moves, so a power cut or a resend cannot double-release.
 - **Fail-safe output**: the release pin is forced off at boot, on any fault, and by a separate on-time guard.
 - **Money in whole cents** (integers), a double-entry ledger that is never edited, and a hash-chained audit log that detects tampering.
 
