@@ -61,7 +61,7 @@ sequenceDiagram
   C->>D: PIN
   D->>S: Callback (secret URL) with receipt
   S->>S: match request, amount, phone; credit ONCE (unique receipt)
-  S->>E: signed vend command (long-poll wakes instantly)
+  S->>E: "signed vend command (long-poll wakes instantly)"
   E->>E: verify signature, expiry, nonce, limits; remember vend ID; release
   E->>S: signed ack
   S-->>C: "Payment received. Balls released, enjoy!"
