@@ -50,22 +50,22 @@ flowchart LR
 
 ```mermaid
 sequenceDiagram
-  participant C as Customer
-  participant S as Server
-  participant D as Daraja
-  participant E as ESP32
-  C->>S: Pay 5 games (idempotency key, phone)
-  S->>S: Table online? price? rate limits? save request
-  S->>D: STK Push (exact amount)
-  D-->>C: "Enter M-Pesa PIN"
-  C->>D: PIN
-  D->>S: Callback (secret URL) with receipt
-  S->>S: match request, amount, phone; credit ONCE (unique receipt)
-  S->>E: "signed vend command (long-poll wakes instantly)"
-  E->>E: verify signature, expiry, nonce, limits; remember vend ID; release
-  E->>S: signed ack
-  S-->>C: "Payment received. Balls released, enjoy!"
-  Note over S,D: If the callback is lost, the reconciler asks Daraja (STK Query) and credits anyway
+    participant C as Customer
+    participant S as Server
+    participant D as Daraja
+    participant E as ESP32
+    C->>S: Pay 5 games (idempotency key, phone)
+    S->>S: Table online? price? rate limits? save request
+    S->>D: STK Push (exact amount)
+    D-->>C: "Enter M-Pesa PIN"
+    C->>D: PIN
+    D->>S: Callback (secret URL) with receipt
+    S->>S: match request, amount, phone; credit ONCE (unique receipt)
+    S->>E: "signed vend command (long-poll wakes instantly)"
+    E->>E: verify signature, expiry, nonce, limits; remember vend ID; release
+    E->>S: signed ack
+    S-->>C: "Payment received. Balls released, enjoy!"
+    Note over S,D: If the callback is lost, the reconciler asks Daraja (STK Query) and credits anyway
 ```
 
 ### A vend's life
