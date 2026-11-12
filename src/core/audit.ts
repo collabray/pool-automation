@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import type { Db } from './db.ts';
+import type { Ctx } from './ctx.ts';
 
 export const GENESIS_HASH = '0'.repeat(64);
 
@@ -41,7 +42,8 @@ export function appendAudit(
   return row.seq;
 }
 
-export function verifyAuditChain(db: Db): { ok: true; count: number } | { ok: false; brokenAtSeq: number; reason: string } {
+export function verifyAuditChain(dbOrCtx: Db | Ctx): { ok: true; count: number } | { ok: false; brokenAtSeq: number; reason: string } {
+  const db = 'db' in dbOrCtx ? dbOrCtx.db : dbOrCtx;
   const rows = db.all<{ seq: number; ts: string; actor: string; action: string; entity_type: string; entity_id: string; data_json: string; prev_hash: string; hash: string }>(
     'SELECT * FROM audit_log ORDER BY seq ASC',
   );

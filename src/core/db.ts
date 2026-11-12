@@ -1,6 +1,6 @@
 import { DatabaseSync, type StatementSync } from 'node:sqlite';
 
-export type Param = string | number | null;
+export type Param = string | number | null | Uint8Array;
 
 /**
  * Thin synchronous wrapper over node:sqlite.
